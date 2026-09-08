@@ -48,6 +48,10 @@ coverage.xml
 *.cover
 *.py.cover
 .hypothesis/
+
+# Node.js
+node_modules/
+.env
 .pytest_cache/
 cover/
 
