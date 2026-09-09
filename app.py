@@ -68,3 +68,11 @@ if st.sidebar.button("🆕 Start New Chat"):
         
     # 3. Refresh Streamlit to render a blank conversation
     st.rerun()
+    # delete the current session_id from session state
+if st.sidebar.button("Delete Current Session"):
+    if "session_id" in st.session_state:
+        memory_service.delete_session(st.session_state.session_id)
+        del st.session_state["session_id"]
+        st.sidebar.success("Current session deleted.")
+    else:
+        st.warning("No session to delete.")

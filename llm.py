@@ -1,4 +1,5 @@
 from langchain_groq import ChatGroq
+from langsmith import traceable
 from config import settings
 
 
@@ -11,7 +12,7 @@ llm = ChatGroq(
 
 class LLMFactory:
     """Creates and manages LLM instances."""
-
+    @traceable(name="chat_completion")
     @staticmethod
     def create_chat_model() -> ChatGroq:
         return ChatGroq(
