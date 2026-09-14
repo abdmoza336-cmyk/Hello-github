@@ -1,3 +1,5 @@
+import uuid
+
 import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
@@ -84,3 +86,16 @@ if st.sidebar.button("Delete Current Session"):
         st.sidebar.success("Current session deleted.")
     else:
         st.warning("No session to delete.")
+
+
+
+# Sidebar button setup
+if st.sidebar.button("+New Chat"):
+    # 1. Reset the message list in Streamlit session state
+    st.session_state.messages = []
+    
+    # 2. Generate a new session ID
+    st.session_state.session_id = str(uuid.uuid4())
+    
+    # 3. Force Streamlit to immediately refresh the UI
+    st.rerun()
