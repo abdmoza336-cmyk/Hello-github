@@ -55,7 +55,7 @@ if st.sidebar.button("📋 List Sessions for User")   :
                 st.sidebar.warning(f"No sessions found for user {user_id}.")
         except Exception as e:
             st.sidebar.error(f"Error listing sessions: {e}")
-            
+
 
 
 
@@ -64,18 +64,12 @@ if st.sidebar.button("📋 List Sessions for User")   :
 # Sidebar button to start a new session
 if st.sidebar.button("🆕 Start New Chat"):
     # 1. Generate a new session ID
-    st.session_state.session_id = memory_service.create_session_id()
+    new_session = create_session("Moza12345")  # Replace with actual user ID
+    st.session_state["session_id"] = new_session["session_id"]
+    st.session_state["selected_session"] = new_session["session_id"]
+    st.sidebar.success(f"New session started with ID: {new_session['session_id']}")
+
     
-    # 2. Clear stored message keys in Streamlit session state
-    if "messages" in st.session_state:
-        del st.session_state["messages"]
-        
-    if "history" in st.session_state:
-        del st.session_state["history"]
-        
-    # 3. Refresh Streamlit to render a blank conversation
-    st.rerun()
-    # delete the current session_id from session state
 if st.sidebar.button("Delete Current Session"):
     if "session_id" in st.session_state:
         memory_service.delete_session(st.session_state.session_id)
