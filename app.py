@@ -1,6 +1,7 @@
 import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
+from session_service import create_session, authorize_session,list_sessions
 
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="centered")
 
@@ -42,15 +43,21 @@ if st.sidebar.button("📊 Count Messages"):
 if st.sidebar.button("🗑️ Clear Chat History") :
     memory_service.clear_session(current_session)
 
-#list all active sessions in the sidebar
-active_sessions = memory_service.get_all_sessions()
-if active_sessions:
-    st.sidebar.subheader("Active Sessions")
-    for session_id in active_sessions:
-        if st.sidebar.button(f"Switch to {session_id}"):
-            st.session_state.selected_session = session_id
-            st.session_state.history = memory_service._history(session_id)
-            st.experimental_rerun()
+# list sessions for a user
+if st.sidebar.button("📋 List Sessions for User")   :
+    user_id = st.text_input("Enter User ID to list sessions:")
+    if user_id:
+        try:
+            sessions = list_sessions(user_id)
+            if sessions:
+                st.sidebar.success(f"Sessions for user {user_id}: {', '.join(sessions)}")
+            else:
+                st.sidebar.warning(f"No sessions found for user {user_id}.")
+        except Exception as e:
+            st.sidebar.error(f"Error listing sessions: {e}")
+            
+
+
 
             
 # 2. Button to Start a New Session
