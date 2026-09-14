@@ -65,11 +65,18 @@ if st.sidebar.button("📋 List Sessions for User")   :
 if st.sidebar.button("🆕 Start New Chat"):
     # 1. Generate a new session ID
     new_session = create_session("Moza12345")  # Replace with actual user ID
+    
+    # 2. Update active session keys
     st.session_state["session_id"] = new_session["session_id"]
     st.session_state["selected_session"] = new_session["session_id"]
-    st.sidebar.success(f"New session started with ID: {new_session['session_id']}")
-
     
+    # 3. Clear the message list for the new chat
+    st.session_state["messages"] = []  
+    
+    # 4. Success message & immediate UI refresh
+    st.sidebar.success(f"New session started with ID: {new_session['session_id']}")
+    st.rerun()
+
 if st.sidebar.button("Delete Current Session"):
     if "session_id" in st.session_state:
         memory_service.delete_session(st.session_state.session_id)
