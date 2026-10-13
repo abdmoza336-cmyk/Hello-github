@@ -3,7 +3,7 @@ import uuid
 import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
-from session_service import create_session, authorize_session,list_sessions
+from session_service import create_session, check_session_ownership,list_sessions
 
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="centered")
 
@@ -71,7 +71,7 @@ if st.sidebar.button("🆕 Start New Chat"):
     st.session_state.messages = []
     st.rerun()
 
-    
+
 if st.sidebar.button("Delete Current Session"):
     if "session_id" in st.session_state:
         memory_service.delete_session(st.session_state.session_id)
