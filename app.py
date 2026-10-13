@@ -1,5 +1,5 @@
 import uuid
-
+import asyncio
 import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
@@ -66,7 +66,7 @@ if st.sidebar.button("📋 List Sessions for User")   :
 # Sidebar button to start a new session
 if st.sidebar.button("🆕 Start New Chat"):
     user_id = str(uuid.uuid4())  # Generate a new user ID for the session
-    new_session = create_session(user_id=user_id)
+    new_session = asyncio.run(create_session(user_id=user_id))
     new_session_id = new_session["session_id"]# extract the new session from the session object
     st.session_state.session_id = new_session_id  # Store the new session ID in Streamlit session state
     st.session_state.history = memory_service._history(new_session_id)  # fetch an empty history for the new session
