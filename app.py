@@ -12,7 +12,8 @@ st.title("🤖 AI Chatbot Assistant")
 if "llm" not in st.session_state:
     st.session_state.llm = get_llm()
 if "history" not in st.session_state:
-    st.session_state.history = memory_service._history("enterprise_session_001")
+    session_id=str(uuid.uuid4())
+    st.session_state.history = memory_service._history(session_id)
 
 for message in st.session_state.history.messages:
     if message.type == "human":
@@ -35,7 +36,7 @@ if user_input := st.chat_input("Type your message here..."):
         except Exception as e:
             st.error(f"Error generating response: {e}")
 # Ensure current session is tracked
-current_session = st.session_state.get("selected_session", "enterprise_session_001")
+current_session = st.session_state.get("selected_session", "default_session")
 
 # Sidebar button to fetch and display total message count
 if st.sidebar.button("📊 Count Messages"):
