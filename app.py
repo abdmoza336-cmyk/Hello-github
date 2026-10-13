@@ -65,18 +65,13 @@ if st.sidebar.button("📋 List Sessions for User")   :
 # 2. Button to Start a New Session
 # Sidebar button to start a new session
 if st.sidebar.button("🆕 Start New Chat"):
-    # 1. Create the new session
-    new_session = create_session("Moza12345")
-    
-    # 2. Update the session IDs
-    st.session_state["session_id"] = new_session["session_id"]
-    st.session_state["selected_session"] = new_session["session_id"]
-    
-    # 3. Reset the chat messages in session state
-    st.session_state["messages"] = []  
-    
-    # 4. Force Streamlit to immediately refresh the UI view
+    new_session = create_session(user_id=user_id)
+    st.session_state.session_id = new_session["session_id"]
+    st.session_state.selected_session = new_session["session_id"]
+    st.session_state.messages = []
     st.rerun()
+
+    
 if st.sidebar.button("Delete Current Session"):
     if "session_id" in st.session_state:
         memory_service.delete_session(st.session_state.session_id)
