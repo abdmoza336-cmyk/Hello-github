@@ -65,6 +65,7 @@ if st.sidebar.button("📋 List Sessions for User")   :
 # 2. Button to Start a New Session
 # Sidebar button to start a new session
 if st.sidebar.button("🆕 Start New Chat"):
+    user_id = str(uuid.uuid4())  # Generate a new user ID for the session
     new_session = create_session(user_id=user_id)
     st.session_state.session_id = new_session["session_id"]
     st.session_state.selected_session = new_session["session_id"]
