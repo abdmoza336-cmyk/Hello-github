@@ -67,10 +67,11 @@ if st.sidebar.button("📋 List Sessions for User")   :
 if st.sidebar.button("🆕 Start New Chat"):
     user_id = str(uuid.uuid4())  # Generate a new user ID for the session
     new_session = create_session(user_id=user_id)
-    st.session_state.session_id = new_session["session_id"]
-    st.session_state.selected_session = new_session["session_id"]
-    st.session_state.messages = []
-    st.rerun()
+    new_session_id = new_session["session_id"]# extract the new session from the session object
+    st.session_state.session_id = new_session_id  # Store the new session ID in Streamlit session state
+    st.session_state.history = memory_service._history(new_session_id)  # fetch an empty history for the new session
+    st.sidebar.success(f"New session started with ID: {new_session_id}")
+    st.rerun()  # Refresh the UI to reflect the new session
 
 
 if st.sidebar.button("Delete Current Session"):
