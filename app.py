@@ -78,7 +78,7 @@ if st.sidebar.button("🆕 Start New Chat"):
         new_session_id = new_session["session_id"]
         st.session_state.session_id = new_session_id  
         st.session_state.selected_session = new_session_id
-        st.session_state.messages = []                                       
+        st.session_state.history = memory_service._history(new_session_id)                                      
         st.rerun()
         
     except Exception as e:
