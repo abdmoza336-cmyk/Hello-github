@@ -47,22 +47,14 @@ if st.sidebar.button("🗑️ Clear Chat History") :
     memory_service.clear_session(current_session)
 
 # list sessions for a user
-if st.sidebar.button("📋 List Sessions for User")   :
-    user_id = st.text_input("Enter User ID to list sessions:")
-    if user_id:
-        try:
-            sessions = list_sessions(user_id)
-            if sessions:
-                st.sidebar.success(f"Sessions for user {user_id}: {', '.join(sessions)}")
-            else:
-                st.sidebar.warning(f"No sessions found for user {user_id}.")
-        except Exception as e:
-            st.sidebar.error(f"Error listing sessions: {e}")
+if st.sidebar.button("📋 List Sessions for User"):
+    user_id = st.session_state.get("user_id", str(uuid.uuid4()))  # Use existing user_id or generate a new one
+    sessions = list_sessions(user_id=user_id)
+    if sessions:
+        st.sidebar.write(sessions)
+    else:
+        st.sidebar.info("No sessions found for this user.")
 
-
-
-
-            
 # 2. Button to Start a New Session
 # Sidebar button to start a new session
 if st.sidebar.button("🆕 Start New Chat"):                               
