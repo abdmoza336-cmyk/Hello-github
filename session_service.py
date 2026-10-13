@@ -59,7 +59,7 @@ async def session_exists(session_id: str) -> bool:
     exists = await r.exists(session_key)
     return exists == 1  # Redis returns 1 if the key exists, 0 otherwise
 
-async def create_session (user_id:str, session_metadata:dict[str, str]|None=None,) -> dict[str, str]:
+def create_session (user_id:str, session_metadata:dict[str, str]|None=None,) -> dict[str, str]:
   user_id=str(uuid.uuid4()) # user_id validation to ensure it is a valid string
   session_metadata = session_metadata or {} # ensure we dont crash if session_metadata is None
   session_id=str(uuid.uuid4())
@@ -81,17 +81,18 @@ async def create_session (user_id:str, session_metadata:dict[str, str]|None=None
 
   # STORE SESSION IN REDIS Database using pipeline to ensure atomicity and performance
   # Use a Redis pipeline to batch commands for efficiency and atomicity
-  pipe = r.pipeline()
+  with r.pipeline() as pipe:
+      
       # Store session data in Redis hash
-  pipe.hset(session_key, mapping=session)
+      pipe.hset(session_key, mapping=session)
 
       # Set expiration for the session key
-  pipe.expire(session_key, session_ttl_seconds)
+      pipe.expire(session_key, session_ttl_seconds)
 
       # Associate session with user- add the session ID to the user's session set in Redis
-  pipe.sadd(user_sessions_key, session_id)
+      pipe.sadd(user_sessions_key, session_id)
       # Execute the pipeline to perform all operations atomically-all in one round trip to Redis, which is more efficient than executing each command separately.
-  await pipe.execute()
+      pipe.execute()
   return session
 
  
