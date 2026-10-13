@@ -1,6 +1,8 @@
 import re
 import uuid
 from datetime import datetime, timezone, timedelta
+
+from attr.converters import pipe
 from memory_service import RedisManager
 session_ttl_seconds = 3600  # 1 hour
 r = RedisManager().redis
@@ -79,7 +81,7 @@ async def create_session (user_id:str, session_metadata:dict[str, str]|None=None
 
   # STORE SESSION IN REDIS Database using pipeline to ensure atomicity and performance
   # Use a Redis pipeline to batch commands for efficiency and atomicity
-  with r.pipeline() as pipe:
+  async with r.pipeline() as pipe:
       # Store session data in Redis hash
       pipe.hset(session_key, mapping=session)
 
@@ -89,7 +91,7 @@ async def create_session (user_id:str, session_metadata:dict[str, str]|None=None
       # Associate session with user- add the session ID to the user's session set in Redis
       pipe.sadd(user_sessions_key, session_id)
       # Execute the pipeline to perform all operations atomically-all in one round trip to Redis, which is more efficient than executing each command separately.
-      pipe.execute()
+  await pipe.execute()
   return session
 
  
