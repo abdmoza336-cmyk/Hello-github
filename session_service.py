@@ -114,18 +114,18 @@ async def check_session_ownership(session_id: str, user_id: str) -> bool:
     return True
 
 # list sessions for a user
-async def list_sessions(user_id: str):
+def list_sessions(user_id: str):
     user_id = validate_user_id(user_id)
     user_sessions_key = f"user:{user_id}:sessions"
-    session_ids = await r.smembers(user_sessions_key)
+    session_ids = r.smembers(user_sessions_key)
     sessions = []
     for session_id in session_ids:
         session_key = f"session:{session_id.decode('utf-8')}"
-        if not await r.exists(session_key):
+        if not r.exists(session_key):
             # Remove expired session from user's session set
-            await r.srem(user_sessions_key, session_id)
+            r.srem(user_sessions_key, session_id)
             continue
-        session_data = await r.hgetall(session_key)
+        session_data = r.hgetall(session_key)
         if session_data:
             sessions.append({k.decode('utf-8'): v.decode('utf-8') for k, v in session_data.items()})
     return sessions
