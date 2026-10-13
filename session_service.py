@@ -79,7 +79,7 @@ async def create_session (user_id:str, session_metadata:dict[str, str]|None=None
 
   # STORE SESSION IN REDIS Database using pipeline to ensure atomicity and performance
   # Use a Redis pipeline to batch commands for efficiency and atomicity
-  async with r.pipeline() as pipe:
+  with r.pipeline() as pipe:
       # Store session data in Redis hash
       pipe.hset(session_key, mapping=session)
 
