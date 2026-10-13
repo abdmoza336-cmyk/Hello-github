@@ -89,7 +89,7 @@ async def create_session (user_id:str, session_metadata:dict[str, str]|None=None
       # Associate session with user- add the session ID to the user's session set in Redis
       pipe.sadd(user_sessions_key, session_id)
       # Execute the pipeline to perform all operations atomically-all in one round trip to Redis, which is more efficient than executing each command separately.
-      await pipe.execute()
+      pipe.execute()
   return session
 
  
