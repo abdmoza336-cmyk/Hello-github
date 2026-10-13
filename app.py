@@ -48,7 +48,7 @@ if st.sidebar.button("🗑️ Clear Chat History") :
 
 # list sessions for a user
 if st.sidebar.button("📋 List Sessions for User"):
-    user_id = st.session_state.get("user_id", str(uuid.uuid4()))  # Use existing user_id or generate a new one
+    user_id = st.session_state.get("user_id", "default_user")  # Use existing user_id or generate a new one
     sessions = list_sessions(user_id=user_id)
     if sessions:
         st.sidebar.write(sessions)
@@ -58,7 +58,7 @@ if st.sidebar.button("📋 List Sessions for User"):
 # 2. Button to Start a New Session
 # Sidebar button to start a new session
 if st.sidebar.button("🆕 Start New Chat"):                               
-    user_id = str(uuid.uuid4())  
+    #user_id = str(uuid.uuid4())  
     
     try:
         new_session = create_session(user_id=user_id)
