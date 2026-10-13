@@ -64,15 +64,25 @@ if st.sidebar.button("📋 List Sessions for User")   :
             
 # 2. Button to Start a New Session
 # Sidebar button to start a new session
-if st.sidebar.button("🆕 Start New Chat"):
-    user_id = str(uuid.uuid4())  # Generate a new user ID for the session
-    new_session = create_session(user_id=user_id)
-    new_session_id = new_session["session_id"]# extract the new session from the session object
-    st.session_state.session_id = new_session_id  # Store the new session ID in Streamlit session state
-    st.session_state.history = memory_service._history(new_session_id)  # fetch an empty history for the new session
-    st.sidebar.success(f"New session started with ID: {new_session_id}")
-    st.rerun()  # Refresh the UI to reflect the new session
-
+if st.sidebar.button("🆕 Start New Chat"):                               
+    user_id = str(uuid.uuid4())  
+    
+    try:
+        new_session = create_session(user_id=user_id)
+        
+        # Let's check what's actually returned
+        if not new_session:
+            st.error("create_session returned None! Check Redis connection.")
+            st.stop()
+            
+        new_session_id = new_session["session_id"]
+        st.session_state.session_id = new_session_id  
+        st.session_state.selected_session = new_session_id
+        st.session_state.messages = []                                       
+        st.rerun()
+        
+    except Exception as e:
+        st.error(f"Error creating session: {e}")
 
 if st.sidebar.button("Delete Current Session"):
     if "session_id" in st.session_state:
