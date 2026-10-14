@@ -121,7 +121,8 @@ if st.sidebar.button("🆕 Start New Chat"):
     #user_id = str(uuid.uuid4())  
     
     try:
-        new_session = create_session(user_id=user_id)
+        new_session = create_session(user_id = st.session_state.user_id, 
+                                     session_metadata={"user_name": st.session_state.user_name} )
         
         # Let's check what's actually returned
         if not new_session:
