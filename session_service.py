@@ -114,7 +114,6 @@ async def check_session_ownership(session_id: str, user_id: str) -> bool:
 
 # list sessions for a user
 def list_sessions(user_id: str):
-    user_id = validate_user_id(user_id)
     user_sessions_key = f"user:{user_id}:sessions"
     session_ids = r.smembers(user_sessions_key)
     sessions = []
