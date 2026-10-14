@@ -8,6 +8,66 @@ from session_service import create_session, check_session_ownership,list_session
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="centered")
 
 st.title("🤖 AI Chatbot Assistant")
+import auth
+
+# 1. Initialize Authentication State
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+    st.session_state.user_id = None
+    st.session_state.user_name = None
+
+# 2. Sidebar Authentication UI (If not logged in)
+if not st.session_state.authenticated:
+    st.sidebar.title("🔐 Account Access")
+    auth_tab1, auth_tab2 = st.sidebar.tabs(["Login", "Sign Up"])
+    
+    with auth_tab1:
+        st.subheader("Welcome Back")
+        login_email = st.text_input("Email", key="login_email")
+        login_password = st.text_input("Password", type="password", key="login_password")
+        
+        if st.button("Log In"):
+            user = auth.authenticate_user(login_email, login_password)
+            if user:
+                st.session_state.authenticated = True
+                st.session_state.user_id = user["user_id"]
+                st.session_state.user_name = user["name"]
+                st.sidebar.success(f"Welcome back, {user['name']}!")
+                st.rerun()
+            else:
+                st.sidebar.error("Invalid email or password.")
+                
+    with auth_tab2:
+        st.subheader("Create Account")
+        signup_name = st.text_input("Full Name", key="signup_name")
+        signup_email = st.text_input("Email", key="signup_email")
+        signup_password = st.text_input("Password", type="password", key="signup_password")
+        
+        if st.button("Register"):
+            if not signup_name or not signup_email or not signup_password:
+                st.sidebar.warning("Please fill out all fields.")
+            else:
+                success, result = auth.register_user(signup_email, signup_password, signup_name)
+                if success:
+                    st.sidebar.success("Account created successfully! Please log in.")
+                else:
+                    st.sidebar.error(result)
+                    
+    # Stop execution here so unauthenticated users cannot see the app
+    st.stop()
+
+# ==========================================
+# 3. Main App (Only runs when authenticated!)
+# ==========================================
+st.sidebar.success(f"Logged in as: {st.session_state.user_name}")
+
+if st.sidebar.button("🚪 Log Out"):
+    st.session_state.authenticated = False
+    st.session_state.user_id = None
+    st.session_state.user_name = None
+    st.rerun()
+
+st.sidebar.markdown("---")
 
 if "llm" not in st.session_state:
     st.session_state.llm = get_llm()
@@ -87,13 +147,3 @@ if st.sidebar.button("Delete Current Session"):
 
 
 
-# Sidebar button setup
-if st.sidebar.button("+New Chat"):
-    # 1. Reset the message list in Streamlit session state
-    st.session_state.messages = []
-    
-    # 2. Generate a new session ID
-    st.session_state.session_id = str(uuid.uuid4())
-    
-    # 3. Force Streamlit to immediately refresh the UI
-    st.rerun()

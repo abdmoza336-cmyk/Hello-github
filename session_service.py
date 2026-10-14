@@ -60,7 +60,6 @@ async def session_exists(session_id: str) -> bool:
     return exists == 1  # Redis returns 1 if the key exists, 0 otherwise
 
 def create_session (user_id:str, session_metadata:dict[str, str]|None=None,) -> dict[str, str]:
-  user_id= "moza213"#str(uuid.uuid4()) # user_id validation to ensure it is a valid string
   session_metadata = session_metadata or {} # ensure we dont crash if session_metadata is None
   session_id=str(uuid.uuid4())
   now=datetime.now(timezone.utc)
