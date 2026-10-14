@@ -22,24 +22,24 @@ def validate_session_id(session_id: str) -> str:
     
     return session_id
 
-def validate_user_id(user_id: str) -> str:
+#def validate_user_id(user_id: str) -> str:
     # 1. Type Check: Ensure the argument is a string before calling string methods
-    if not isinstance(user_id, str):
-        raise ValueError("User ID must be a string.")
+    #if not isinstance(user_id, str):
+       # raise ValueError("User ID must be a string.")
 
     # 2. Sanitize: Clean whitespace so empty spaces aren't considered valid input
-    user_id = user_id.strip()
+    #user_id = user_id.strip()
 
     # 3. Presence Check: Ensure the string is not empty after trimming
-    if not user_id:
-        raise ValueError("User ID cannot be empty.")
+    #if not user_id:
+    #    raise ValueError("User ID cannot be empty.")
 
     # 4. Pattern/Format Check: Validate against business rules or regex patterns
-    if not USER_ID_PATTERN.fullmatch(user_id):
-        raise ValueError("Invalid user ID format. Must be 8-32 alphanumeric characters.")
+    #if not USER_ID_PATTERN.fullmatch(user_id):
+    #    raise ValueError("Invalid user ID format. Must be 8-32 alphanumeric characters.")
 
     # 5. Return sanitized result
-    return user_id
+    #return user_id
 
 def validate_tenant_id(tenant_id: str) -> str:
     # 1. Type Check: Ensure the argument is a string before calling string methods
