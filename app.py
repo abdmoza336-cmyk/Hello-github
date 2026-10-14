@@ -107,8 +107,8 @@ if st.sidebar.button("🗑️ Clear Chat History") :
     memory_service.clear_session(current_session)
 
 # list sessions for a user
-if st.sidebar.button("📋 List Sessions for User"):
-    user_id = st.session_state.get("user_id", "default_user")  # Use existing user_id or generate a new one
+if st.sidebar.button("📋 Chats"):
+    user_id = st.session_state.user_id
     sessions = list_sessions(user_id=user_id)
     if sessions:
         st.sidebar.write(sessions)
