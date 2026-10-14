@@ -117,13 +117,10 @@ if st.sidebar.button("📋 List Sessions for User"):
 
 # 2. Button to Start a New Session
 # Sidebar button to start a new session
-if st.sidebar.button("🆕 Start New Chat"):                               
-    #user_id = str(uuid.uuid4())  
-    
+if st.sidebar.button("🆕 Start New Chat"): 
+    new_session = create_session(user_id = st.session_state.user_id, 
+                                     session_metadata={"user_name": st.session_state.user_name} )                              
     try:
-        new_session = create_session(user_id = st.session_state.user_id, 
-                                     session_metadata={"user_name": st.session_state.user_name} )
-        
         # Let's check what's actually returned
         if not new_session:
             st.error("create_session returned None! Check Redis connection.")
