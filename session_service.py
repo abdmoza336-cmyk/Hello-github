@@ -98,7 +98,6 @@ def create_session (user_id:str, session_metadata:dict[str, str]|None=None,) -> 
 # check ownership of a session to ensure that only the user who owns the session can perform operations on it. This is important for security and access control.
 async def check_session_ownership(session_id: str, user_id: str) -> bool:
     session_id = validate_session_id(session_id)
-    user_id = validate_user_id(user_id)
     session_key = f"session:{session_id}"
 
     # fetch the session data from Redis to check if the session exists and if the user_id matches the one stored in the session
@@ -118,14 +117,13 @@ def list_sessions(user_id: str):
     session_ids = r.smembers(user_sessions_key)
     sessions = []
     for session_id in session_ids:
-        session_key = f"session:{session_id.decode('utf-8')}"
+        session_key = f"session:{session_id}"
         if not r.exists(session_key):
             # Remove expired session from user's session set
             r.srem(user_sessions_key, session_id)
             continue
         session_data = r.hgetall(session_key)
         if session_data:
-            sessions.append({k.decode('utf-8'): v.decode('utf-8') for k, v in session_data.items()})
+            sessions.append({k: v for k, v in session_data.items()})
     return sessions
 
-# ch
