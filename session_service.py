@@ -66,7 +66,7 @@ def create_session (user_id:str, session_metadata:dict[str, str]|None=None,) -> 
   expires_at=now+timedelta(seconds=session_ttl_seconds)  
   session_key=f"session:{session_id}" # Create a key for the session for Redis storage
   user_sessions_key=f"user:{user_id}:sessions"
-  default_title = session_metadata.get("title", f"Chat ({now.strftime('%b %d, %H:%M')})")
+  default_title = session_metadata.get("title", "MOZA TESTING")#f"Chat ({now.strftime('%b %d, %H:%M')})")
 
 
   # 3. Build session data - allow to include extra metadata from the caller (e.g., ip, user_agent)

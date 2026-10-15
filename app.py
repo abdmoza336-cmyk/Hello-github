@@ -108,7 +108,7 @@ if st.sidebar.button("🗑️ Clear Chat History") :
 
 # list sessions for a user
 if st.sidebar.button("📋 Chats"):
-    st.sidebar.subheader("Your Chat Sessions")
+    #st.sidebar.subheader("Your Chat Sessions")
     user_sessions = list_sessions(st.session_state.user_id)
     
     if not user_sessions:
