@@ -108,8 +108,24 @@ if st.sidebar.button("🗑️ Clear Chat History") :
 
 # list sessions for a user
 if st.sidebar.button("📋 Chats"):
-    user_id = st.session_state.user_id
-user_sessions = list_sessions(st.session_state.user_id)
+    st.sidebar.subheader("Your Chat Sessions")
+    user_sessions = list_sessions(st.session_state.user_id)
+    
+    if not user_sessions:
+        st.sidebar.info("No chat sessions found. Start a new chat!")
+    else:
+        for session in user_sessions:
+            session_title = session.get("title", "Untitled Chat")
+            session_id = session.get("session_id")
+            
+            # Highlight the currently active session
+            is_current = session_id == st.session_state.get("session_id")
+            button_label = f"📍 {session_title}" if is_current else f"💬 {session_title}"
+            
+            if st.sidebar.button(button_label, key=f"session_btn_{session_id}"):
+                # Switch active session state and rerun app
+                st.session_state.session_id = session_id
+                st.rerun()
 
 # 2. Render each session cleanly in the sidebar
 for session in user_sessions:
