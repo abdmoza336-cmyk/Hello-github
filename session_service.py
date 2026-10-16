@@ -103,8 +103,17 @@ def update_session_title(session_id: str, new_title: str) -> None:
         raise ValueError("Session does not exist.")
     # Update the title field in the session hash
     r.hset(session_key, "title", new_title) 
-    
- 
+
+def get_session(session_id: str) -> dict[str, str]:
+    session_id = validate_session_id(session_id)
+    session_key = f"session:{session_id}"
+    session_data = r.hgetall(session_key)
+    if not session_data:
+        raise ValueError("Session does not exist.")
+    # Convert bytes to string for all fields in the session data
+    return {k.decode("utf-8"): v.decode("utf-8") for k, v in session_data.items()}
+
+
 # check ownership of a session to ensure that only the user who owns the session can perform operations on it. This is important for security and access control.
 async def check_session_ownership(session_id: str, user_id: str) -> bool:
     session_id = validate_session_id(session_id)

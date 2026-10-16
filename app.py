@@ -3,7 +3,7 @@ import asyncio
 import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
-from session_service import create_session, check_session_ownership,list_sessions
+from session_service import create_session, check_session_ownership,list_sessions,get_session, update_session_title
 
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="centered")
 
@@ -89,7 +89,7 @@ if user_input := st.chat_input("Type your message here..."):
     st.session_state.history.add_user_message(user_input)
     current_session_id = st.session_state.get("session_id")
     if current_session_id:
-        session_data=memory_service.get_session(current_session_id)
+        session_data=get_session(current_session_id)
         current_session_title=session_data.get("title", "Untitled Chat")
         if current_session_title.startswith("Chat ("):
             new_title = user_input[:50] + "..." if len(user_input) > 50 else user_input
