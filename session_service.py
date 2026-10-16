@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 
 from attr.converters import pipe
 from memory_service import RedisManager
+import memory_service
 session_ttl_seconds = 3600  # 1 hour
 r = RedisManager().redis
 
@@ -112,6 +113,11 @@ def get_session(session_id: str) -> dict[str, str]:
         raise ValueError("Session does not exist.")
     # Convert bytes to string for all fields in the session data
     return session_data
+
+def get_session_messages(session_id: str) -> list[dict[str, str]]:
+    session_id = validate_session_id(session_id)
+    session_messages = memory_service.get_messages(session_id)
+    return session_messages
 
 
 # check ownership of a session to ensure that only the user who owns the session can perform operations on it. This is important for security and access control.
