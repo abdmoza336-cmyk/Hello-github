@@ -118,6 +118,7 @@ if st.sidebar.button("📊 Count Messages"):
     st.sidebar.info(f"Total messages in session: **{count}**")
 # Sidebar button to clear chat history
 if st.sidebar.button("🗑️ Clear Chat History") :
+    current_session = st.session_state.get("selected_session", "default_session")
     session_ownership = check_session_ownership(st.session_state.user_id, current_session)
     if not session_ownership:
         st.sidebar.error("You do not have permission to clear this session's history.")
