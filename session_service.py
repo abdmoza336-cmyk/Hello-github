@@ -111,7 +111,7 @@ def get_session(session_id: str) -> dict[str, str]:
     if not session_data:
         raise ValueError("Session does not exist.")
     # Convert bytes to string for all fields in the session data
-    return {k.decode("utf-8"): v.decode("utf-8") for k, v in session_data.items()}
+    return session_data
 
 
 # check ownership of a session to ensure that only the user who owns the session can perform operations on it. This is important for security and access control.
