@@ -66,7 +66,7 @@ def create_session (user_id:str, session_metadata:dict[str, str]|None=None,) -> 
   expires_at=now+timedelta(seconds=session_ttl_seconds)  
   session_key=f"session:{session_id}" # Create a key for the session for Redis storage
   user_sessions_key=f"user:{user_id}:sessions"
-  default_title = session_metadata.get("title", "MOZA TESTING")#f"Chat ({now.strftime('%b %d, %H:%M')})")
+  default_title = session_metadata.get("title", f"Chat ({now.strftime('%b %d, %H:%M')})")
 
 
   # 3. Build session data - allow to include extra metadata from the caller (e.g., ip, user_agent)
@@ -95,7 +95,15 @@ def create_session (user_id:str, session_metadata:dict[str, str]|None=None,) -> 
       # Execute the pipeline to perform all operations atomically-all in one round trip to Redis, which is more efficient than executing each command separately.
       pipe.execute()
   return session
-
+def update_session_title(session_id: str, new_title: str) -> None:
+    session_id = validate_session_id(session_id)
+    session_key = f"session:{session_id}"
+    # Check if the session exists before updating
+    if not r.exists(session_key):
+        raise ValueError("Session does not exist.")
+    # Update the title field in the session hash
+    r.hset(session_key, "title", new_title) 
+    
  
 # check ownership of a session to ensure that only the user who owns the session can perform operations on it. This is important for security and access control.
 async def check_session_ownership(session_id: str, user_id: str) -> bool:
