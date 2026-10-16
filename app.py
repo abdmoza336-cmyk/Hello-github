@@ -86,6 +86,7 @@ for message in st.session_state.history.messages:
 if user_input := st.chat_input("Type your message here..."):
     with st.chat_message("user"):
         st.markdown(user_input)
+    # ADD USER MESSAGE TO HISTORY.
     st.session_state.history.add_user_message(user_input)
     # Update the session title based on the user's first message if the current title is still the default format
     #OPTION 1:Truncate the title to 50 characters and append "..." if it's longer than 50 characters
@@ -105,10 +106,11 @@ if user_input := st.chat_input("Type your message here..."):
             stream_response = st.session_state.llm.stream(st.session_state.history.messages)
             full_response = st.write_stream(stream_response)
             st.session_state.history.add_ai_message(full_response)
+            current_session = st.session_state.get("selected_session", "default_session")
+            
+
         except Exception as e:
             st.error(f"Error generating response: {e}")
-# Ensure current session is tracked
-current_session = st.session_state.get("selected_session", "default_session")
 
 # Sidebar button to fetch and display total message count
 if st.sidebar.button("📊 Count Messages"):
