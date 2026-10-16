@@ -3,7 +3,7 @@ import asyncio
 import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
-from session_service import create_session, check_session_ownership,list_sessions,get_session, update_session_title
+from session_service import create_session, check_session_ownership,list_sessions,get_session, update_session_title,delete_session
 
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="centered")
 
@@ -171,7 +171,7 @@ if st.sidebar.button("🆕 Start New Chat"):
 
 if st.sidebar.button("Delete Current Session"):
     if "session_id" in st.session_state:
-        memory_service.delete_session(st.session_state.session_id)
+        delete_session(st.session_state.session_id, st.session_state.user_id)
         del st.session_state["session_id"]
         st.sidebar.success("Current session deleted.")
     else:

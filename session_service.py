@@ -151,4 +151,16 @@ def list_sessions(user_id: str):
         if session_data:
             sessions.append({k: v for k, v in session_data.items()})
     return sessions
-
+def delete_session(session_id: str, user_id: str) -> None:
+    session_id = validate_session_id(session_id)
+    session_key = f"session:{session_id}"
+    session_data = r.hgetall(session_key)
+    if not session_data:
+        raise ValueError("Session does not exist.")
+    user_id = session_data.get(b"user_id", b"").decode("utf-8")
+    user_sessions_key = f"user:{user_id}:sessions"
+    # Use a Redis pipeline to delete the session and remove it from the user's session set atomically
+    with r.pipeline() as pipe:
+        pipe.delete(session_key)  # Delete the session hash
+        pipe.srem(user_sessions_key, session_id)  # Remove the session ID from the user's session set
+        pipe.execute()  # Execute the pipeline to perform all operations atomically
