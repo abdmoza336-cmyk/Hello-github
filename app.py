@@ -107,7 +107,7 @@ if user_input := st.chat_input("Type your message here..."):
             full_response = st.write_stream(stream_response)
             st.session_state.history.add_ai_message(full_response)
             current_session = st.session_state.get("selected_session", "default_session")
-            
+
 
         except Exception as e:
             st.error(f"Error generating response: {e}")
@@ -118,6 +118,9 @@ if st.sidebar.button("📊 Count Messages"):
     st.sidebar.info(f"Total messages in session: **{count}**")
 # Sidebar button to clear chat history
 if st.sidebar.button("🗑️ Clear Chat History") :
+    session_ownership = check_session_ownership(st.session_state.user_id, current_session)
+    if not session_ownership:
+        st.sidebar.error("You do not have permission to clear this session's history.")
     memory_service.clear_session(current_session)
 
 # list sessions for a user
