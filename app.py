@@ -3,7 +3,7 @@ import asyncio
 import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
-from session_service import create_session, check_session_ownership,list_sessions,get_session, update_session_title,get_session_messages
+from session_service import create_session, check_session_ownership,list_sessions,get_session, update_session_title
 
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="centered")
 
@@ -138,8 +138,8 @@ if st.sidebar.button("📋 Chats"):
                 # Switch active session state and rerun app
                 st.session_state.session_id = session_id
                 # Update the history for the selected session
-            
-                st.session_state.history = get_session_messages(session_id)
+                st.session_state.history = memory_service._history(session_id)  
+                 
                 st.rerun()
 
 
