@@ -87,12 +87,16 @@ if user_input := st.chat_input("Type your message here..."):
     with st.chat_message("user"):
         st.markdown(user_input)
     st.session_state.history.add_user_message(user_input)
+    # Update the session title based on the user's first message if the current title is still the default format
+    #OPTION 1:Truncate the title to 50 characters and append "..." if it's longer than 50 characters
     current_session_id = st.session_state.get("session_id")
     if current_session_id:
         session_data=get_session(current_session_id)
         current_session_title=session_data.get("title", "Untitled Chat")
         if current_session_title.startswith("Chat ("):
             new_title = user_input[:50] + "..." if len(user_input) > 50 else user_input
+     #OPTION2: ADVANCED :CALL LLM TO GENERATE A SUMMARY TITLE
+            #new_title = st.session_state.llm.generate_title(user_input)  # Assuming you have a method to generate a title from the LLM       
             update_session_title(current_session_id, new_title)
 
 
