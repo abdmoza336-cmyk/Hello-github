@@ -4,6 +4,7 @@ import streamlit as st
 from denpendancy import get_llm
 from memory_service import memory_service
 from session_service import create_session, check_session_ownership,list_sessions,get_session, update_session_title,delete_session
+from rate_limiter import RateLimiter
 
 st.set_page_config(page_title="AI Chatbot", page_icon="🤖", layout="centered")
 
@@ -82,7 +83,12 @@ for message in st.session_state.history.messages:
     elif message.type == "ai":
         with st.chat_message("assistant"):
             st.markdown(message.content)
-
+# Initialize RateLimiter
+rate_limiter = RateLimiter(max_requests=3, time_window=3600)  #
+rate_limit_exceeded = not rate_limiter.check_rate_limit(st.session_state.user_id)
+if rate_limit_exceeded:
+    st.warning("You have exceeded the maximum number of requests allowed per hour. Please try again later.")
+    st.stop()
 if user_input := st.chat_input("Type your message here..."):
     with st.chat_message("user"):
         st.markdown(user_input)
