@@ -24,5 +24,5 @@ class RateLimiter:
             return True  # Request is allowed
         
 
-RateLimiter=RateLimiter()  # Create an instance of the RateLimiter class with a maximum of 3 requests per hour
+RateLimiter=RateLimiter(max_requests=3, time_window=3600)  # Create an instance of the RateLimiter class with a maximum of 3 requests per hour
         
