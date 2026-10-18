@@ -6,8 +6,8 @@ from auth import authenticate_user
 
 class RateLimiter:
     def __init__(self, max_requests, time_window):
-        self.max_requests = 3
-        self.time_window = 60 # 1 hour in seconds
+        self.max_requests = max_requests
+        self.time_window = time_window
         self.redis = RedisManager().redis
     def check_rate_limit(self, user_id: str) -> bool:
         if not user_id:
@@ -28,5 +28,5 @@ class RateLimiter:
             return True  # Request is allowed
         
 
-limiter=RateLimiter()  # Create an instance of the RateLimiter class with a maximum of 3 requests per hour
+limiter=RateLimiter(max_requests=3, time_window=60)  # Create an instance of the RateLimiter class with a maximum of 3 requests per hour
         
