@@ -84,8 +84,7 @@ for message in st.session_state.history.messages:
         with st.chat_message("assistant"):
             st.markdown(message.content)
 # Initialize RateLimiter
-rate_limiter = RateLimiter(max_requests=3, time_window=3600)  #
-rate_limit_exceeded = not rate_limiter.check_rate_limit(st.session_state.user_id)
+rate_limit_exceeded = not RateLimiter.check_rate_limit(st.session_state.user_id)
 if rate_limit_exceeded:
     st.warning("You have exceeded the maximum number of requests allowed per hour. Please try again later.")
     st.stop()
