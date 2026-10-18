@@ -8,7 +8,7 @@ class RateLimiter:
         self.time_window = time_window
         self.redis = RedisManager().redis
     def check_rate_limit(self, user_id, password):
-        user_id =authenticate_user(user_id)    # this is the user you want to check the rate limit for
+        user_id =authenticate_user(user_id,password)    # this is the user you want to check the rate limit for
         current_time = int(time.time())        # Get the current time in seconds for the rate limit check
         rate_key = f"rate_limit:{user_id}"          # Create a unique key for the user in Redis
         pipe= self.redis.pipeline()                     # Create a Redis pipeline for atomic operations
